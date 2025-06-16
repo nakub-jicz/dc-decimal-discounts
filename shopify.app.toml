@@ -3,7 +3,7 @@
 client_id = "c436a8cc5bb4ce40e5b6a3b8ff5feeb1"
 name = "gowno-dena"
 handle = "gowno-dena"
-application_url = "https://spam-candidate-fitness-entering.trycloudflare.com"
+application_url = "https://sustained-batman-strips-aye.trycloudflare.com"
 embedded = true
 
 [build]
@@ -27,9 +27,9 @@ scopes = "write_products,read_discounts,write_discounts"
 
 [auth]
 redirect_urls = [
-  "https://spam-candidate-fitness-entering.trycloudflare.com/auth/callback",
-  "https://spam-candidate-fitness-entering.trycloudflare.com/auth/shopify/callback",
-  "https://spam-candidate-fitness-entering.trycloudflare.com/api/auth/callback"
+  "https://sustained-batman-strips-aye.trycloudflare.com/auth/callback",
+  "https://sustained-batman-strips-aye.trycloudflare.com/auth/shopify/callback",
+  "https://sustained-batman-strips-aye.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]

@@ -17,13 +17,16 @@ import {
   TextField,
   Toast,
   Banner,
-  Frame
+  Frame,
+  InlineGrid,
+  FormLayout,
 } from "@shopify/polaris";
 import {
   SearchIcon,
-  CheckIcon
+  CheckIcon,
+  ViewIcon
 } from "@shopify/polaris-icons"
-import { TitleBar, useAppBridge } from "@shopify/app-bridge-react";
+import { TitleBar, useAppBridge, SaveBar } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 
 
@@ -61,8 +64,12 @@ const CHANGE_PERCENTAGE_MUTATION = `
   }
 `;
 
+
+
+
 export const loader = async ({ request }) => {
   const { admin } = await authenticate.admin(request);
+  
 
   const response = await admin.graphql(
     `query MyQuery {
@@ -139,7 +146,9 @@ export const action = async ({ request }) => {
 };
 
 export default function Index() {
+  
   const shopify = useAppBridge();
+  
   const mapa_znizek = new Map()
   const deselectedOptions = []
   const discounts = useLoaderData()
@@ -154,7 +163,7 @@ export default function Index() {
       }
     }
   });
-
+  
   const [options, setOptions] = useState(deselectedOptions);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [inputValue, setInputValue] = useState('');
@@ -164,11 +173,13 @@ export default function Index() {
   const [toastActive, setToastActive] = useState(false);
   const [toastContent, setToastContent] = useState("");
   const [toastError, setToastError] = useState(false);
-
+  const [previewURL, setPreviewURL] = useState("")
+  const [pierwotnyPrecentaz, setPierwotnyPrecentaz] = useState(0.00)
+  
   const updateText = useCallback(
     (value) => {
       setInputValue(value);
-
+      
       if (value === '') {
         setOptions(deselectedOptions);
         return;
@@ -207,6 +218,8 @@ export default function Index() {
       setInputValue(selectedValue[0] || '');
       setSelectedDiscountID(selected[0])
       setCurrentPercentage((mapa_znizek.get(selected[0]) * 100).toFixed(2))
+      setPierwotnyPrecentaz((mapa_znizek.get(selected[0]) * 100).toFixed(2))
+      console.log("PIERWOTNY: "+pierwotnyPrecentaz)
     },
     [options],
   );
@@ -226,6 +239,18 @@ export default function Index() {
     }
   }, [fetcher.data]);
 
+  const handleSave = () => {
+    ApplyDiscount()
+    console.log('Saving');
+    shopify.saveBar.hide('my-save-bar');
+  };
+
+  const handleDiscard = () => {
+    console.log(pierwotnyPrecentaz);
+    setCurrentPercentage(pierwotnyPrecentaz)
+    shopify.saveBar.hide('my-save-bar');
+  };
+
   const ApplyDiscount = () => {
     if (!selectedDiscountID || currentPercentage < 0 || currentPercentage > 100) {
       setToastContent("Please select a discount and enter a valid percentage (0-100).");
@@ -244,45 +269,59 @@ export default function Index() {
       },
       { method: "post" }
     );
+    console.log("NOWY PROCENT" + (nowy_procent*100).toFixed(2))
+    setPierwotnyPrecentaz((nowy_procent*100).toFixed(2))
   };
 
   return (
     <Page>
-      <TitleBar title="Remix app template">
+      <TitleBar title="DC Decimal Discounts">
       </TitleBar>
+      <SaveBar id="my-save-bar">
+        <button variant="primary" onClick={handleSave}></button>
+        <button onClick={handleDiscard}></button>
+      </SaveBar>
       <BlockStack gap="500">
         <Frame>
           <Card >
+            <FormLayout>
             <Autocomplete
               options={options}
               selected={selectedOptions}
               onSelect={updateSelection}
               textField={textField}
             />
-            <div style={{ width: '150px' }}>
               <TextField
                 label="Percentage"
                 type="number"
                 value={currentPercentage}
                 onChange={(val) => {
                   setCurrentPercentage(val)
+                  if(currentPercentage != pierwotnyPrecentaz) {
+                    shopify.saveBar.show('my-save-bar')
+                  } else {
+                    shopify.saveBar.hide('my-save-bar')
+                  }
                 }}
                 suffix="%"
-                autoSize
                 autoComplete="off"
+                autoSize
                 size="slim"
                 min={0}
                 max={100}
+                id="wejscie_procentaza"
               />
-            </div>
-            <Button
-              variant="primary"
-              onClick={ApplyDiscount}
-              icon={CheckIcon}
-              loading={fetcher.state === "submitting"}
-              disabled={fetcher.state === "submitting"}
-            >
-              Apply discount</Button>
+              <Button
+                variant="primary"
+                onClick={ApplyDiscount}
+                icon={CheckIcon}
+                loading={fetcher.state === "submitting"}
+                disabled={fetcher.state === "submitting"}
+              >
+                Apply discount</Button>
+
+
+            </FormLayout>
           </Card>
           {toastActive && (
             <Toast
