@@ -14,6 +14,6 @@
   ],
   "vars": {
     "SHOPIFY_APP_URL": "https://dc-decimal-discounts.jakub-okseniuk.workers.dev/",
-    "SCOPES": "writes_products"
+    "SCOPES": "write_discounts,read_discounts"
   }
 }

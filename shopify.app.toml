@@ -2,8 +2,8 @@
 
 client_id = "c66a0f825f3df1b67a8500e7d942cea4"
 name = "DC Decimal Discounts"
-handle = "gowno"
-application_url = "https://tramadol-flame-technologies-financing.trycloudflare.com"
+handle = "dc-decimal-discounts-lyniew"
+application_url = "https://dc-decimal-discounts.jakub-okseniuk.workers.dev/"
 embedded = true
 
 [build]
@@ -14,27 +14,15 @@ automatically_update_urls_on_dev = true
 [webhooks]
 api_version = "2025-04"
 
-  [[webhooks.subscriptions]]
-  uri = "/webhook"
-  compliance_topics = [ "customers/data_request", "customers/redact", "shop/redact" ]
-
-  [[webhooks.subscriptions]]
-  topics = [ "app/scopes_update" ]
-  uri = "https://magazine-assignment-screensavers-mighty.trycloudflare.com/webhooks/app/scopes_update"
-
-  [[webhooks.subscriptions]]
-  topics = [ "app/uninstalled" ]
-  uri = "https://magazine-assignment-screensavers-mighty.trycloudflare.com/webhooks/app/uninstalled"
-
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "write_products"
+scopes = "write_discounts,read_discounts"
 
 [auth]
 redirect_urls = [
-  "https://tramadol-flame-technologies-financing.trycloudflare.com/auth/callback",
-  "https://tramadol-flame-technologies-financing.trycloudflare.com/auth/shopify/callback",
-  "https://tramadol-flame-technologies-financing.trycloudflare.com/api/auth/callback"
+  "https://dc-decimal-discounts.jakub-okseniuk.workers.dev/auth/callback",
+  "https://dc-decimal-discounts.jakub-okseniuk.workers.dev/auth/shopify/callback",
+  "https://dc-decimal-discounts.jakub-okseniuk.workers.dev/api/auth/callback"
 ]
 
 [pos]
