@@ -164,7 +164,8 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
     return json({ success: false, error: "Brak wymaganych danych." });
   }
 
-  const variables = { id, percentage: parseFloat(percentage as string) / 100 };
+  const rawPercentage = (percentage as string).replace(',', '.');
+  const variables = { id, percentage: parseFloat(rawPercentage) / 100 };
   let mutation;
   let resultKey;
   switch (discountType) {
