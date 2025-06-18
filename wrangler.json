@@ -1,0 +1,22 @@
+{
+    "name": "dc-decimal-discounts",
+    "compatibility_date": "2024-09-23",
+    "main": "worker.js",
+    "assets": {
+        "directory": "./build/client"
+    },
+    "observability": {
+        "enabled": true
+    },
+    "upload_source_maps": false,
+    "compatibility_flags": [
+        "nodejs_compat"
+    ],
+    "vars": {
+        "SHOPIFY_APP_URL": "https://dc-decimal-discounts.jakub-okseniuk.workers.dev",
+        "SCOPES": "read_products,write_products"
+    },
+    "build": {
+        "command": "npm run build"
+    }
+}

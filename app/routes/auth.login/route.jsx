@@ -11,19 +11,20 @@ import {
 } from "@shopify/polaris";
 import polarisTranslations from "@shopify/polaris/locales/en.json";
 import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
-import { login } from "../../shopify.server";
 import { loginErrorMessage } from "./error.server";
 
 export const links = () => [{ rel: "stylesheet", href: polarisStyles }];
 
-export const loader = async ({ request }) => {
-  const errors = loginErrorMessage(await login(request));
+export const loader = async ({ request, context }) => {
+  const { login, shopify } = await import("../../shopify.server");
+  const errors = loginErrorMessage(await shopify(context).login(request));
 
   return { errors, polarisTranslations };
 };
 
-export const action = async ({ request }) => {
-  const errors = loginErrorMessage(await login(request));
+export const action = async ({ request, context }) => {
+  const { login, shopify } = await import("../../shopify.server");
+  const errors = loginErrorMessage(await shopify(context).login(request));
 
   return {
     errors,

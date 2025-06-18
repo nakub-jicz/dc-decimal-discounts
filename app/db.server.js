@@ -1,11 +1,15 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client/edge";
+import { withAccelerate } from "@prisma/extension-accelerate";
 
-if (process.env.NODE_ENV !== "production") {
-  if (!global.prismaGlobal) {
-    global.prismaGlobal = new PrismaClient();
+let prisma;
+
+const getPrisma = (DATABASE_URL) => {
+  if (!prisma) {
+    prisma = new PrismaClient({
+      datasourceUrl: DATABASE_URL,
+    }).$extends(withAccelerate());
   }
-}
+  return prisma;
+};
 
-const prisma = global.prismaGlobal ?? new PrismaClient();
-
-export default prisma;
+export default getPrisma;

@@ -27,8 +27,6 @@ import {
   ViewIcon
 } from "@shopify/polaris-icons"
 import { TitleBar, useAppBridge, SaveBar } from "@shopify/app-bridge-react";
-import { authenticate } from "../shopify.server";
-
 
 const CHANGE_PERCENTAGE_MUTATION = `
   mutation change_percentage($id: ID!, $percentage: Float!) {
@@ -64,12 +62,9 @@ const CHANGE_PERCENTAGE_MUTATION = `
   }
 `;
 
-
-
-
-export const loader = async ({ request }) => {
-  const { admin } = await authenticate.admin(request);
-  
+export const loader = async ({ request, context }) => {
+  const { shopify } = await import("../shopify.server");
+  const { admin } = await shopify(context).authenticate.admin(request);
 
   const response = await admin.graphql(
     `query MyQuery {
@@ -134,8 +129,9 @@ export const loader = async ({ request }) => {
   return responseJson;
 };
 
-export const action = async ({ request }) => {
-  const { admin } = await authenticate.admin(request);
+export const action = async ({ request, context }) => {
+  const { shopify } = await import("../shopify.server");
+  const { admin } = await shopify(context).authenticate.admin(request);
   const formData = await request.formData();
   const query = formData.get("query");
   const variables = JSON.parse(formData.get("variables"));
@@ -146,9 +142,9 @@ export const action = async ({ request }) => {
 };
 
 export default function Index() {
-  
+
   const shopify = useAppBridge();
-  
+
   const mapa_znizek = new Map()
   const deselectedOptions = []
   const discounts = useLoaderData()
@@ -163,7 +159,7 @@ export default function Index() {
       }
     }
   });
-  
+
   const [options, setOptions] = useState(deselectedOptions);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [inputValue, setInputValue] = useState('');
@@ -175,11 +171,11 @@ export default function Index() {
   const [toastError, setToastError] = useState(false);
   const [previewURL, setPreviewURL] = useState("")
   const [pierwotnyPrecentaz, setPierwotnyPrecentaz] = useState(0.00)
-  
+
   const updateText = useCallback(
     (value) => {
       setInputValue(value);
-      
+
       if (value === '') {
         setOptions(deselectedOptions);
         return;
@@ -219,7 +215,7 @@ export default function Index() {
       setSelectedDiscountID(selected[0])
       setCurrentPercentage((mapa_znizek.get(selected[0]) * 100).toFixed(2))
       setPierwotnyPrecentaz((mapa_znizek.get(selected[0]) * 100).toFixed(2))
-      console.log("PIERWOTNY: "+pierwotnyPrecentaz)
+      console.log("PIERWOTNY: " + pierwotnyPrecentaz)
     },
     [options],
   );
@@ -269,8 +265,8 @@ export default function Index() {
       },
       { method: "post" }
     );
-    console.log("NOWY PROCENT" + (nowy_procent*100).toFixed(2))
-    setPierwotnyPrecentaz((nowy_procent*100).toFixed(2))
+    console.log("NOWY PROCENT" + (nowy_procent * 100).toFixed(2))
+    setPierwotnyPrecentaz((nowy_procent * 100).toFixed(2))
   };
 
   return (
@@ -285,19 +281,19 @@ export default function Index() {
         <Frame>
           <Card >
             <FormLayout>
-            <Autocomplete
-              options={options}
-              selected={selectedOptions}
-              onSelect={updateSelection}
-              textField={textField}
-            />
+              <Autocomplete
+                options={options}
+                selected={selectedOptions}
+                onSelect={updateSelection}
+                textField={textField}
+              />
               <TextField
                 label="Percentage"
                 type="number"
                 value={currentPercentage}
                 onChange={(val) => {
                   setCurrentPercentage(val)
-                  if(currentPercentage != pierwotnyPrecentaz) {
+                  if (currentPercentage != pierwotnyPrecentaz) {
                     shopify.saveBar.show('my-save-bar')
                   } else {
                     shopify.saveBar.hide('my-save-bar')

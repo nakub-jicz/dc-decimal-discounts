@@ -1,9 +1,9 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "c436a8cc5bb4ce40e5b6a3b8ff5feeb1"
-name = "gowno-dena"
-handle = "gowno-dena"
-application_url = "https://sustained-batman-strips-aye.trycloudflare.com"
+name = "DC Decimal Disocunts"
+handle = "dc-decimal-discounts"
+application_url = "https://dc-decimal-discounts.jakub-okseniuk.workers.dev/"
 embedded = true
 
 [build]
@@ -14,12 +14,16 @@ automatically_update_urls_on_dev = true
 api_version = "2025-04"
 
   [[webhooks.subscriptions]]
-  topics = [ "app/uninstalled" ]
-  uri = "/webhooks/app/uninstalled"
+  topics = ["app/uninstalled"]
+  uri = "https://dc-decimal-discounts.jakub-okseniuk.workers.dev/webhook"
 
   [[webhooks.subscriptions]]
-  topics = [ "app/scopes_update" ]
-  uri = "/webhooks/app/scopes_update"
+  topics = ["shop/update"]
+  uri = "https://dc-decimal-discounts.jakub-okseniuk.workers.dev/webhook"
+
+  [[webhooks.subscriptions]]
+  topics = ["products/update"]
+  uri = "https://dc-decimal-discounts.jakub-okseniuk.workers.dev/webhook"
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
@@ -27,9 +31,9 @@ scopes = "write_products,read_discounts,write_discounts"
 
 [auth]
 redirect_urls = [
-  "https://sustained-batman-strips-aye.trycloudflare.com/auth/callback",
-  "https://sustained-batman-strips-aye.trycloudflare.com/auth/shopify/callback",
-  "https://sustained-batman-strips-aye.trycloudflare.com/api/auth/callback"
+  "https://dc-decimal-discounts.jakub-okseniuk.workers.dev/auth/callback",
+  "https://dc-decimal-discounts.jakub-okseniuk.workers.dev/auth/shopify/callback",
+  "https://dc-decimal-discounts.jakub-okseniuk.workers.dev/api/auth/callback"
 ]
 
 [pos]
